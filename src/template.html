@@ -1,0 +1,93 @@
+<html>
+  <head>
+    <style>
+      .hover {
+        background-color: black !important;
+        color: white;
+      }
+      html {
+        height: 100%;
+      }
+      html,
+      body {
+        display: grid;
+        padding: 0px;
+        margin: 0px;
+        overflow: hidden;
+      }
+      body {
+        grid: 0.8fr 0.2fr / 0.5fr 0.5fr;
+        font: 16px "Consolas", monospace;
+      }
+      body > div {
+        overflow: auto;
+        border: 2px solid #c0c0c0;
+        padding: 5px;
+      }
+      body > div > div {
+        display: flex;
+        white-space: pre;
+      }
+      #bottom {
+        grid-column: span 2;
+      }
+      .break {
+        break-after: always;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="left">{LEFT}</div>
+    <div id="right">{RIGHT}</div>
+    <div id="bottom">{BOTTOM}</div>
+    <script>
+      const styleSheet = document.styleSheets[0];
+      document.body.onmouseover = function (event) {
+        if (event.target.classList.length) {
+          styleSheet.cssRules[0].selectorText = new Array(
+            ...event.target.classList
+          )
+            .map((className) => "." + className)
+            .join(",");
+        }
+      };
+      document.body.onmouseout = function (event) {
+        if (event.target.className) {
+          styleSheet.cssRules[0].selectorText = ".hover";
+        }
+      };
+
+      const colorPalette = [
+        "#FFC0C0",
+        "#C0FFC0",
+        "#C0C0FF",
+        "#FFFFC0",
+        "#C0FFFF",
+        "#FFC0FF",
+        "#FFC0A0",
+        "#A0FFC0",
+        "#C0A0FF",
+        "#FFA0C0",
+        "#C0FFA0",
+        "#A0C0FF",
+      ];
+      const classNames = new Set();
+      for (line of document.getElementById("left").children) {
+        for (child of line.children) {
+          for (className of child.classList) {
+            classNames.add(className);
+          }
+        }
+      }
+
+      let index = 0;
+      for (className of classNames) {
+        styleSheet.addRule(
+          "." + className,
+          "background-color: " + colorPalette[index % colorPalette.length]
+        );
+        index++;
+      }
+    </script>
+  </body>
+</html>
